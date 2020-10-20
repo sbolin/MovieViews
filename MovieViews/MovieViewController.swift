@@ -12,10 +12,8 @@ class MovieViewController: UIViewController {
 // MARK: - Properties
     let moviesController = MovieController()
     var collectionView: UICollectionView! = nil
-    var dataSource: UICollectionViewDiffableDataSource
-    <MovieController.MovieCollection, MovieController.Movie>! = nil
-    var currentSnapshot: NSDiffableDataSourceSnapshot
-    <MovieController.MovieCollection, MovieController.Movie>! = nil
+    var dataSource: UICollectionViewDiffableDataSource<MovieController.MovieCollection, MovieController.Movie>! = nil
+    var currentSnapshot: NSDiffableDataSourceSnapshot<MovieController.MovieCollection, MovieController.Movie>! = nil
     static let sectionHeaderElementKind = "section-header-element-kind"
     static let sectionFooterElementKind = "section-footer-element-kind"
     
@@ -100,13 +98,10 @@ extension MovieViewController {
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: movie)
         }
         
-        let supplementaryRegistration = UICollectionView.SupplementaryRegistration
-        <TitleSupplementaryView>(elementKind: "Footer") {
-            (supplementaryView, string, indexPath) in
+        let supplementaryRegistration = UICollectionView.SupplementaryRegistration<TitleSupplementaryView>(elementKind: "Footer") { (supplementaryView, string, indexPath) in
             if let snapshot = self.currentSnapshot {
-                // Populate the view with our section's description.
-                let videoCategory = snapshot.sectionIdentifiers[indexPath.section]
-                supplementaryView.label.text = videoCategory.title
+                let movieGenre = snapshot.sectionIdentifiers[indexPath.section]
+                supplementaryView.label.text = movieGenre.genre
             }
         }
         
@@ -116,11 +111,11 @@ extension MovieViewController {
         }
         
         currentSnapshot = NSDiffableDataSourceSnapshot
-        <MovieController.VideoCollection, MovieController.Video>()
-        videosController.collections.forEach {
+        <MovieController.MovieCollection, MovieController.Movie>()
+        moviesController.collections.forEach {
             let collection = $0
             currentSnapshot.appendSections([collection])
-            currentSnapshot.appendItems(collection.videos)
+            currentSnapshot.appendItems(collection.movies)
         }
         dataSource.apply(currentSnapshot, animatingDifferences: false)
     }
