@@ -31,8 +31,10 @@ extension MovieViewController {
     
     func createLayout() -> UICollectionViewLayout {
         
+        let cellHeight:CGFloat = 250
+        
         let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 20
+        config.interSectionSpacing = 12
         
         let sectionProvider = { (sectionIndex: Int,
                                  layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
@@ -43,7 +45,7 @@ extension MovieViewController {
             // if we have the space, adapt and go 2-up + peeking 3rd item
             let groupFractionalWidth = CGFloat(layoutEnvironment.container.effectiveContentSize.width > 500 ?
                                                 0.425 : 0.85)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(groupFractionalWidth), heightDimension: .absolute(250))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(groupFractionalWidth), heightDimension: .absolute(cellHeight))
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: groupSize, subitems: [item])
             
@@ -60,7 +62,6 @@ extension MovieViewController {
             section.boundarySupplementaryItems = [sectionHeader]
             return section
         }
-        
         
         let layout = UICollectionViewCompositionalLayout(
             sectionProvider: sectionProvider, configuration: config)
@@ -100,8 +101,8 @@ extension MovieViewController {
         
         let supplementaryRegistration = UICollectionView.SupplementaryRegistration<TitleSupplementaryView>(elementKind: "Footer") { (supplementaryView, string, indexPath) in
             if let snapshot = self.currentSnapshot {
-                let movieGenre = snapshot.sectionIdentifiers[indexPath.section]
-                supplementaryView.label.text = movieGenre.genre
+                let movieCollection = snapshot.sectionIdentifiers[indexPath.section]
+                supplementaryView.label.text = movieCollection.genre
             }
         }
         
