@@ -52,7 +52,6 @@ extension MovieCell {
         imageView.layer.cornerRadius = 4
         imageView.backgroundColor = UIColor.systemIndigo.withAlphaComponent(0.5)
         
-        
         let spacing = CGFloat(10)
         
         NSLayoutConstraint.activate([

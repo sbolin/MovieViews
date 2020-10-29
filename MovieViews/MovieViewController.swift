@@ -34,7 +34,7 @@ extension MovieViewController {
         let cellHeight:CGFloat = 250
         
         let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 12
+        config.interSectionSpacing = 8
         
         let sectionProvider = {
             (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
@@ -51,7 +51,7 @@ extension MovieViewController {
             
             let section = NSCollectionLayoutSection(group: group)
             section.orthogonalScrollingBehavior = .groupPagingCentered // originally .continuous
-            section.interGroupSpacing = 10
+            section.interGroupSpacing = 8
             //           section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
             
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
@@ -87,19 +87,19 @@ extension MovieViewController {
         let cellRegistration = UICollectionView.CellRegistration
         <MovieCell, MovieController.Movie> { (cell, indexPath, movie) in
             // Populate the cell with our item description.
+            print("cellRegistration")
             cell.titleLabel.text = movie.title
             cell.descriptionLabel.text = movie.genre
             cell.yearLabel.text = String(movie.year)
         }
         
-        dataSource = UICollectionViewDiffableDataSource
-        <MovieController.MovieCollection, MovieController.Movie>(collectionView: collectionView) {
+        dataSource = UICollectionViewDiffableDataSource<MovieController.MovieCollection, MovieController.Movie>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, movie: MovieController.Movie) -> UICollectionViewCell? in
             // Return the cell.
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: movie)
         }
         
-        let supplementaryRegistration = UICollectionView.SupplementaryRegistration<TitleSupplementaryView>(elementKind: "Footer") { (supplementaryView, string, indexPath) in
+        let supplementaryRegistration = UICollectionView.SupplementaryRegistration<TitleSupplementaryView>(elementKind: "Header") { (supplementaryView, string, indexPath) in
             if let snapshot = self.currentSnapshot {
                 let movieCollection = snapshot.sectionIdentifiers[indexPath.section]
                 supplementaryView.label.text = movieCollection.genre
